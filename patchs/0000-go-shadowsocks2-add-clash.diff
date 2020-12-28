@@ -1,0 +1,39 @@
+Thanks https://github.com/Dreamacro/go-shadowsocks2/pull/2
+--- a/core/cipher.go
++++ b/core/cipher.go
+@@ -52,6 +52,7 @@ var streamList = map[string]struct {
+ 	KeySize int
+ 	New     func(key []byte) (shadowstream.Cipher, error)
+ }{
++	"NONE":          {16, shadowstream.NONE},
+ 	"RC4-MD5":       {16, shadowstream.RC4MD5},
+ 	"AES-128-CTR":   {16, shadowstream.AESCTR},
+ 	"AES-192-CTR":   {24, shadowstream.AESCTR},
+--- a/shadowstream/cipher.go
++++ b/shadowstream/cipher.go
+@@ -111,3 +111,25 @@ func (k rc4Md5Key) Decrypter(iv []byte) cipher.Stream {
+ func RC4MD5(key []byte) (Cipher, error) {
+ 	return rc4Md5Key(key), nil
+ }
++
++type noneCipher struct{}
++
++func (n noneCipher) XORKeyStream(dst, src []byte) {
++	copy(dst, src)
++}
++
++func (n noneCipher) Encrypter(iv []byte) cipher.Stream {
++	return n
++}
++
++func (n noneCipher) Decrypter(iv []byte) cipher.Stream {
++	return n
++}
++
++func (n noneCipher) IVSize() int {
++	return 0
++}
++
++func NONE(key []byte) (Cipher, error) {
++	return noneCipher{}, nil
++}

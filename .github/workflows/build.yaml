@@ -1,0 +1,38 @@
+name: Build result
+
+on:
+  push:
+    branches: [master]
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup Go
+      uses: actions/setup-go@v2
+      with:
+        go-version: 1.15.x
+
+    - name: Clone latest clash
+      run: |
+        git clone https://github.com/Dreamacro/clash.git
+        git clone https://github.com/Dreamacro/go-shadowsocks2.git
+
+    - name: Patch files
+      run: |
+        cd go-shadowsocks2
+        patch -p1 <../patchs/0000-go-shadowsocks2-add-clash.diff
+        cd ../clash
+        patch -p1 <../patchs/0001-clash-rewrite-go-mod.diff
+
+    - name: Build clash all platform
+      run: |
+        cd clash
+        make all-arch
+
+    - name: ls files
+      run: |
+        ls clash/bin
