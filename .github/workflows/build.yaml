@@ -36,7 +36,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |  
         set -x
-        hub release delete latest
+        hub release delete latest | true
         hub release create -m latest latest
 
         for item in `ls clash/bin`; do
