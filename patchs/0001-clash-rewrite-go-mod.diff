@@ -1,5 +1,5 @@
 --- a/go.mod
-+++ b/go.mod
++++ clash/go.mod
 @@ -3,7 +3,6 @@ module github.com/Dreamacro/clash
  go 1.15
  

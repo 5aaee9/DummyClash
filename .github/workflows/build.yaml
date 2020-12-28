@@ -23,16 +23,22 @@ jobs:
 
     - name: Patch files
       run: |
-        cd go-shadowsocks2
-        patch -p1 <../patchs/0000-go-shadowsocks2-add-clash.diff
-        cd ../clash
-        patch -p1 <../patchs/0001-clash-rewrite-go-mod.diff
+        patch -p0 <../patchs/0000-go-shadowsocks2-add-clash.diff
+        patch -p0 <../patchs/0001-clash-rewrite-go-mod.diff
 
     - name: Build clash all platform
       run: |
         cd clash
         make all-arch
 
-    - name: ls files
-      run: |
-        ls clash/bin
+    - name: Release files
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |  
+        set -x
+        assets=()
+        for asset in clash/bin/*; do
+          assets+=("-a" "$asset")
+        done
+        hub release delete latest
+        hub release create "${assets[@]}" -m latest latest
