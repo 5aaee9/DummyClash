@@ -40,7 +40,9 @@ jobs:
         set -x
         hub release delete latest | true
         hub release create -m latest latest
-        UPSTREAM_HASH=`cd clash && git rev-parse HEAD`
+        REPO_HASH="${{github.sha}}"
+        UPSTREAM_CLASH_HASH=`cd clash && git rev-parse HEAD`
+        UPSTREAM_GO_SS2_HASH=`cd go-shadowsocks2 && git rev-parse HEAD`
         
         for item in `ls clash/bin`; do
           gzip -9 clash/bin/$item
@@ -52,9 +54,10 @@ jobs:
         popd
 
         hub release edit -a clash/bin/sha256sum -m "" latest
-        echo ${{github.sha}} > github.release
+        echo "Latest build ${REPO_HASH:0:6}" > github.release
         echo "" >> github.release
-        echo "Upstream Hash: \`$UPSTREAM_HASH\`" >> github.release
+        echo "Upstream clash Hash: \`$UPSTREAM_CLASH_HASH\`" >> github.release
+        echo "Upstream go-shadowsocks2 Hash: \`$UPSTREAM_GO_SS2_HASH\`" >> github.release
         echo "" >> github.release
         echo "\`\`\`" >> github.release
         cat clash/bin/sha256sum >> github.release
