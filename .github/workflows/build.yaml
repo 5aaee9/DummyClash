@@ -23,8 +23,8 @@ jobs:
 
     - name: Patch files
       run: |
-        patch -p0 <../patchs/0000-go-shadowsocks2-add-clash.diff
-        patch -p0 <../patchs/0001-clash-rewrite-go-mod.diff
+        patch -p0 <patchs/0000-go-shadowsocks2-add-clash.diff
+        patch -p0 <patchs/0001-clash-rewrite-go-mod.diff
 
     - name: Build clash all platform
       run: |
