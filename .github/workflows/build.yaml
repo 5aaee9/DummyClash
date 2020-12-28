@@ -52,7 +52,11 @@ jobs:
         popd
 
         hub release edit -a clash/bin/sha256sum -m "" latest
-        
-        hub release edit -m ${{github.sha}} \
-          -m "Upstream Hash: \`$UPSTREAM_HASH\`" \
-          -m "\`\`\`\n"$(cat clash/bin/sha256sum)"\n\`\`\`" latest
+        echo ${{github.sha}} > github.release
+        echo "" >> github.release
+        echo "Upstream Hash: \`$UPSTREAM_HASH\`" >> github.release
+        echo "" >> github.release
+        echo "\`\`\`" >> github.release
+        cat clash/bin/sha256sum >> github.release
+        echo "\`\`\`" >> github.release
+        hub release edit -F github.release latest
