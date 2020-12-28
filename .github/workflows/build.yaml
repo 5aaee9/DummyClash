@@ -47,7 +47,7 @@ jobs:
         popd
 
         for item in `ls clash/bin`; do
-          gzip -9 $item
+          gzip -9 clash/bin/$item
           hub release edit -a clash/bin/$item.gz -m "" latest
         done
         hub release edit -m "# SHA256\n```"$(cat clash/bin/sha256sum)"```" latest
