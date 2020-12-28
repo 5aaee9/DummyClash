@@ -38,16 +38,21 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |  
         set -x
-        SHASUM=`cd clash/bin && echo sha256sum *`
         hub release delete latest | true
         hub release create -m latest latest
+        UPSTREAM_HASH=`cd clash && git rev-parse HEAD`
         
-        pushd clash/bin
-        sha256sum * > sha256sum
-        popd
-
         for item in `ls clash/bin`; do
           gzip -9 clash/bin/$item
           hub release edit -a clash/bin/$item.gz -m "" latest
         done
-        hub release edit -m "# SHA256\n```"$(cat clash/bin/sha256sum)"```" latest
+
+        pushd clash/bin
+        sha256sum * > sha256sum
+        popd
+
+        hub release edit -a clash/bin/sha256sum -m "" latest
+        
+        hub release edit -m ${{github.sha}} \
+          -m "Upstream Hash: \`$UPSTREAM_HASH\`" \
+          -m "\`\`\`\n"$(cat clash/bin/sha256sum)"\n\`\`\`" latest
