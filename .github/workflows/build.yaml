@@ -36,9 +36,9 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |  
         set -x
-        assets=()
-        for asset in clash/bin/*; do
-          assets+=("-a" "$asset")
-        done
         hub release delete latest
-        hub release create "${assets[@]}" -m latest latest
+        hub release create -m latest latest
+
+        for item in `ls clash/bin`; do
+          hub release edit -a clash/bin/$item -m "" latest
+        done
