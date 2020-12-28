@@ -1,6 +1,8 @@
 name: Build result
 
 on:
+  schedule:
+  - cron:  '0 8 * * *'
   push:
     branches: [master]
 
@@ -40,5 +42,6 @@ jobs:
         hub release create -m latest latest
 
         for item in `ls clash/bin`; do
-          hub release edit -a clash/bin/$item -m "" latest
+          gzip -9 $item
+          hub release edit -a clash/bin/$item.gz -m "" latest
         done
