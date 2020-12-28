@@ -38,10 +38,16 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |  
         set -x
+        SHASUM=`cd clash/bin && echo sha256sum *`
         hub release delete latest | true
         hub release create -m latest latest
+        
+        pushd clash/bin
+        sha256sum * > sha256sum
+        popd
 
         for item in `ls clash/bin`; do
           gzip -9 $item
           hub release edit -a clash/bin/$item.gz -m "" latest
         done
+        hub release edit -m "# SHA256\n```"$(cat clash/bin/sha256sum)"```" latest
