@@ -1,0 +1,11 @@
+Why Clash for Windows request /script and return 405?
+--- a/hub/route/server.go
++++ clash/hub/route/server.go
+@@ -61,6 +61,7 @@ func Start(addr string, secret string) {
+ 		r.Use(authentication)
+ 
+ 		r.Get("/", hello)
++		r.Post("/script", hello)
+ 		r.Get("/logs", getLogs)
+ 		r.Get("/traffic", traffic)
+ 		r.Get("/version", version)
