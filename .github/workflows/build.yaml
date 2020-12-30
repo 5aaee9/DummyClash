@@ -75,10 +75,10 @@ jobs:
         for item in `ls result`; do
           # Skip 7zip file
           if [[ "$item" =~ .*\.7z ]]; then
+            hub release edit -a result/$item -m "" latest
+          else
             gzip -9 result/$item
             hub release edit -a result/$item.gz -m "" latest
-          else
-            hub release edit -a result/$item -m "" latest
           fi
         done
 
