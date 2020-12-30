@@ -41,6 +41,7 @@ jobs:
     - name: Build arm core
       run: |
         cd clashX/ClashX/goClash
+        go mod tidy
         python3 build_clash_arm64.py
 
     - name: setup Go stable
