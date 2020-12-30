@@ -20,8 +20,8 @@ jobs:
 
     - name: Setup env
       run: |
-        apt-get update -y
-        apt-get install git make p7zip-full -y
+        sudo apt-get update -y
+        sudo apt-get install git make p7zip-full -y
 
     - name: Create result dir
       run: mkdir result
