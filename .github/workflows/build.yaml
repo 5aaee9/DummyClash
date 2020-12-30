@@ -18,6 +18,14 @@ jobs:
       with:
         go-version: 1.15.x
 
+    - name: Setup env
+      run: |
+        apt-get update -y
+        apt-get install git make p7zip-full -y
+
+    - name: Create result dir
+      run: mkdir result
+
     - name: Clone latest clash
       run: |
         git clone https://github.com/Dreamacro/clash.git
@@ -33,6 +41,25 @@ jobs:
       run: |
         cd clash
         make all-arch
+        mv bin/* ../result
+
+    - name: Fetch latest cfw version
+      id: clash_for_windows
+      uses: pozetroninc/github-action-get-latest-release@master
+      with:
+        repository: Fndroid/clash_for_windows_pkg
+
+    - name: Download latest cfw 
+      run: |
+        echo Downloading CFW ${{ steps.clash_for_windows.outputs.release }}
+        mkdir -p cfw/Clash.for.Windows-${{ steps.clash_for_windows.outputs.release }}-win
+        cd cfw/Clash.for.Windows-${{ steps.clash_for_windows.outputs.release }}-win
+        wget https://github.com/Fndroid/clash_for_windows_pkg/releases/download/${{ steps.clash_for_windows.outputs.release }}/Clash.for.Windows-${{ steps.clash_for_windows.outputs.release }}-win.7z
+        7z x Clash.for.Windows-${{ steps.clash_for_windows.outputs.release }}-win.7z
+        rm -f Clash.for.Windows-${{ steps.clash_for_windows.outputs.release }}-win.7z
+        rm -f resources/static/files/win/x64/clash-win64.exe
+        cp ../../result/clash-windows-amd64.exe resources/static/files/win/x64/clash-win64.exe
+        7z a ../../result/Clash.for.Windows-${{ steps.clash_for_windows.outputs.release }}-win.7z *
 
     - name: Release files
       env:
@@ -45,22 +72,28 @@ jobs:
         UPSTREAM_CLASH_HASH=`cd clash && git rev-parse HEAD`
         UPSTREAM_GO_SS2_HASH=`cd go-shadowsocks2 && git rev-parse HEAD`
         
-        for item in `ls clash/bin`; do
-          gzip -9 clash/bin/$item
-          hub release edit -a clash/bin/$item.gz -m "" latest
+        for item in `ls result`; do
+          # Skip 7zip file
+          if [[ "$item" =~ .*\.7z ]]; then
+            gzip -9 result/$item
+            hub release edit -a result/$item.gz -m "" latest
+          else
+            hub release edit -a result/$item -m "" latest
+          fi
         done
 
-        pushd clash/bin
+        pushd result
         sha256sum * > sha256sum
         popd
 
-        hub release edit -a clash/bin/sha256sum -m "" latest
+        hub release edit -a result/sha256sum -m "" latest
         echo "Latest build ${REPO_HASH:0:6}" > github.release
         echo "" >> github.release
         echo "Upstream clash Hash: \`$UPSTREAM_CLASH_HASH\`" >> github.release
         echo "Upstream go-shadowsocks2 Hash: \`$UPSTREAM_GO_SS2_HASH\`" >> github.release
+        echo "CFW version: \`${{ steps.clash_for_windows.outputs.release }}\`" >> github.release
         echo "" >> github.release
         echo "\`\`\`" >> github.release
-        cat clash/bin/sha256sum >> github.release
+        cat result/sha256sum >> github.release
         echo "\`\`\`" >> github.release
         hub release edit -F github.release latest
