@@ -7,9 +7,79 @@ on:
     branches: [master]
 
 jobs:
-  build:
-    name: Build
+  clashX:
+    name: Clash X Build
+    runs-on: macOS-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Setup Go 1.16
+      uses: actions/setup-go@v2
+      with:
+        stable: 'false'
+        go-version: 1.16.0-beta1
+
+    - name: Clone clashX source
+      run: |
+        git clone https://github.com/yichengchen/clashX.git
+        patch -p0 <patchs/0003-clash-x-build.diff
+        cd clashX/ClashX/goClash
+        git clone https://github.com/Dreamacro/clash.git
+        git clone https://github.com/Dreamacro/go-shadowsocks2.git
+        patch -p0 <../../../patchs/0000-go-shadowsocks2-add-clash.diff
+        patch -p0 <../../../patchs/0001-clash-rewrite-go-mod.diff
+
+
+    - name: Setup env
+      run: |
+        echo `/usr/bin/xcodebuild -version`
+        cd clashX
+        gem install bundler:1.16.2
+        bundle install
+
+    - name: Build arm core
+      run: |
+        cd clashX/ClashX/goClash
+        python3 build_clash_arm64.py
+
+    - name: setup Go stable
+      uses: actions/setup-go@v2
+      with:
+        go-version: 1.15.x
+
+    - name: Build core x64
+      run: |
+        cd clashX/ClashX/goClash
+        python3 build_clash.py
+        mv goClash.a goClash_x86.a
+        lipo *.a -create -output goClash.a
+
+    - name: Build
+      run: |
+        cd clashX
+        bash install_dependency.sh skip-build-go
+        cd ClashX
+        python3 add_build_info.py
+        cd ..
+        bundle exec fastlane build
+
+    - name: Create DMG
+      run: |
+        npm install --global create-dmg
+        create-dmg ClashX.app
+        mv ClashX*.dmg ClashX.dmg
+
+    - name: Create ClashX artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: clashX
+        path: ClashX.dmg
+
+  clash:
+    name: Build Clash
     runs-on: ubuntu-latest
+    needs: clashX
 
     steps:
     - uses: actions/checkout@v2
@@ -60,6 +130,11 @@ jobs:
         rm -f resources/static/files/win/x64/clash-win64.exe
         cp ../../result/clash-windows-amd64.exe resources/static/files/win/x64/clash-win64.exe
         7z a ../../result/Clash.for.Windows-${{ steps.clash_for_windows.outputs.release }}-win.7z *
+
+    - name: Download math result for job 1
+      uses: actions/download-artifact@v2
+      with:
+        name: clashX
 
     - name: Release files
       env:
