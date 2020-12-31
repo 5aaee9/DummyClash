@@ -65,12 +65,11 @@ jobs:
         python3 add_build_info.py
         cd ..
         bundle exec fastlane build
-        ls -lah
 
     - name: Create DMG
       run: |
         npm install --global create-dmg
-        create-dmg ClashX.app
+        create-dmg clashX/ClashX.app
         mv ClashX*.dmg ClashX.dmg
 
     - name: Create ClashX artifact
