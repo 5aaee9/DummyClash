@@ -1,22 +1,11 @@
 --- a/ClashX.xcodeproj/project.pbxproj
 +++ clashX/ClashX.xcodeproj/project.pbxproj
-@@ -812,6 +812,7 @@
- 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
- 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
- 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
-+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
- 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
- 				CLANG_WARN_STRICT_PROTOTYPES = YES;
- 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
-@@ -873,6 +874,7 @@
- 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
- 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
- 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
-+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
- 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
- 				CLANG_WARN_STRICT_PROTOTYPES = YES;
- 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
-@@ -911,7 +913,7 @@
+@@ -907,11 +907,11 @@
+ 				ARCHS = "$(ARCHS_STANDARD)";
+ 				CLANG_ENABLE_MODULES = YES;
+ 				CODE_SIGN_ENTITLEMENTS = ClashX/ClashX.entitlements;
+-				CODE_SIGN_IDENTITY = "-";
++				CODE_SIGN_IDENTITY = "Apple Development";
  				CODE_SIGN_STYLE = Manual;
  				COMBINE_HIDPI_IMAGES = YES;
  				CURRENT_PROJECT_VERSION = 1.31.2;
@@ -25,7 +14,7 @@
  				ENABLE_HARDENED_RUNTIME = YES;
  				FRAMEWORK_SEARCH_PATHS = (
  					"$(inherited)",
-@@ -950,13 +952,13 @@
+@@ -950,13 +950,13 @@
  				ARCHS = "$(ARCHS_STANDARD)";
  				CLANG_ENABLE_MODULES = YES;
  				CODE_SIGN_ENTITLEMENTS = ClashX/ClashX.entitlements;
@@ -41,16 +30,19 @@
  				ENABLE_HARDENED_RUNTIME = YES;
  				FRAMEWORK_SEARCH_PATHS = (
  					"$(inherited)",
-@@ -995,7 +997,7 @@
+@@ -993,9 +993,9 @@
+ 			buildSettings = {
+ 				ARCHS = "$(ARCHS_STANDARD)";
  				CODE_SIGN_ENTITLEMENTS = ProxyConfigHelper/com.west2online.ClashX.ProxyConfigHelper.entitlements;
- 				CODE_SIGN_IDENTITY = "-";
+-				CODE_SIGN_IDENTITY = "-";
++				CODE_SIGN_IDENTITY = "Apple Development";
  				CODE_SIGN_STYLE = Manual;
 -				DEVELOPMENT_TEAM = MEWHFZ92DY;
-+				DEVELOPMENT_TEAM = "";
++				DEVELOPMENT_TEAM = 7BG9T7B3R7;
  				ENABLE_HARDENED_RUNTIME = YES;
  				INFOPLIST_FILE = "$(SRCROOT)/ProxyConfigHelper/Helper-Info.plist";
  				MACOSX_DEPLOYMENT_TARGET = 10.10;
-@@ -1024,10 +1026,10 @@
+@@ -1024,10 +1024,10 @@
  			buildSettings = {
  				ARCHS = "$(ARCHS_STANDARD)";
  				CODE_SIGN_ENTITLEMENTS = ProxyConfigHelper/com.west2online.ClashX.ProxyConfigHelper.entitlements;
