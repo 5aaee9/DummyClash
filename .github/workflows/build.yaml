@@ -75,8 +75,19 @@ jobs:
     - name: Create ClashX artifact
       uses: actions/upload-artifact@v2
       with:
-        name: clashX
+        name: ClashX
         path: ClashX.dmg
+
+    - name: Create ClashX version file
+      run: |
+        cd clashX
+        git rev-parse HEAD > ../ClashXVersion
+
+    - name: Create ClashX version artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: ClashXVersion
+        path: ClashXVersion
 
   clash:
     name: Build Clash
@@ -133,25 +144,33 @@ jobs:
         cp ../../result/clash-windows-amd64.exe resources/static/files/win/x64/clash-win64.exe
         7z a ../../result/Clash.for.Windows-${{ steps.clash_for_windows.outputs.release }}-win.7z *
 
-    - name: Download math result for job 1
+    - name: Download ClashX result
       uses: actions/download-artifact@v2
       with:
-        name: clashX
+        name: ClashX
+
+    - name: Download ClashX version result
+      uses: actions/download-artifact@v2
+      with:
+        name: ClashXVersion
 
     - name: Release files
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |  
         set -x
+        ls -lah
+        mv ClashX.dmg result
         hub release delete latest | true
         hub release create -m latest latest
         REPO_HASH="${{github.sha}}"
         UPSTREAM_CLASH_HASH=`cd clash && git rev-parse HEAD`
         UPSTREAM_GO_SS2_HASH=`cd go-shadowsocks2 && git rev-parse HEAD`
+        UPSTREAM_CLASH_X_HASH=`cat ClashXVersion`
         
         for item in `ls result`; do
           # Skip 7zip file
-          if [[ "$item" =~ .*\.7z ]]; then
+          if [[ "$item" =~ .*\.7z || "$item" =~ .*\.dmg ]]; then
             hub release edit -a result/$item -m "" latest
           else
             gzip -9 result/$item
@@ -169,6 +188,7 @@ jobs:
         echo "Upstream clash Hash: \`$UPSTREAM_CLASH_HASH\`" >> github.release
         echo "Upstream go-shadowsocks2 Hash: \`$UPSTREAM_GO_SS2_HASH\`" >> github.release
         echo "CFW version: \`${{ steps.clash_for_windows.outputs.release }}\`" >> github.release
+        echo "Clash X version: \`"$UPSTREAM_CLASH_X_HASH"\`" >> github.release
         echo "" >> github.release
         echo "\`\`\`" >> github.release
         cat result/sha256sum >> github.release
