@@ -24,6 +24,7 @@ jobs:
       run: |
         git clone https://github.com/yichengchen/clashX.git
         patch -p0 <patchs/0003-clash-x-build.diff
+        patch -p0 <patchs/0004-remove-clashx-code-sign.diff
         cd clashX/ClashX/goClash
         git clone https://github.com/Dreamacro/clash.git
         git clone https://github.com/Dreamacro/go-shadowsocks2.git
@@ -64,6 +65,7 @@ jobs:
         python3 add_build_info.py
         cd ..
         bundle exec fastlane build
+        ls -lah
 
     - name: Create DMG
       run: |
