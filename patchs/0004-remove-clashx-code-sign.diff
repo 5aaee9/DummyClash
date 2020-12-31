@@ -21,7 +21,7 @@
  				COMBINE_HIDPI_IMAGES = YES;
  				CURRENT_PROJECT_VERSION = 1.31.2;
 -				DEVELOPMENT_TEAM = MEWHFZ92DY;
-+				DEVELOPMENT_TEAM = "";
++				DEVELOPMENT_TEAM = 7BG9T7B3R7;
  				ENABLE_HARDENED_RUNTIME = YES;
  				FRAMEWORK_SEARCH_PATHS = (
  					"$(inherited)",
@@ -30,14 +30,14 @@
  				CLANG_ENABLE_MODULES = YES;
  				CODE_SIGN_ENTITLEMENTS = ClashX/ClashX.entitlements;
 -				CODE_SIGN_IDENTITY = "Developer ID Application";
-+				CODE_SIGN_IDENTITY = "-";
++				CODE_SIGN_IDENTITY = "Apple Development";
  				CODE_SIGN_STYLE = Manual;
  				COMBINE_HIDPI_IMAGES = YES;
  				COPY_PHASE_STRIP = YES;
  				CURRENT_PROJECT_VERSION = 1.31.2;
  				DEPLOYMENT_POSTPROCESSING = YES;
 -				DEVELOPMENT_TEAM = MEWHFZ92DY;
-+				DEVELOPMENT_TEAM = "";
++				DEVELOPMENT_TEAM = 7BG9T7B3R7;
  				ENABLE_HARDENED_RUNTIME = YES;
  				FRAMEWORK_SEARCH_PATHS = (
  					"$(inherited)",
@@ -55,54 +55,11 @@
  				ARCHS = "$(ARCHS_STANDARD)";
  				CODE_SIGN_ENTITLEMENTS = ProxyConfigHelper/com.west2online.ClashX.ProxyConfigHelper.entitlements;
 -				CODE_SIGN_IDENTITY = "Developer ID Application";
-+				CODE_SIGN_IDENTITY = "-";
++				CODE_SIGN_IDENTITY = "Apple Development";
  				CODE_SIGN_STYLE = Manual;
  				DEPLOYMENT_POSTPROCESSING = YES;
 -				DEVELOPMENT_TEAM = MEWHFZ92DY;
-+				DEVELOPMENT_TEAM = "";
++				DEVELOPMENT_TEAM = 7BG9T7B3R7;
  				ENABLE_HARDENED_RUNTIME = YES;
  				INFOPLIST_FILE = "$(SRCROOT)/ProxyConfigHelper/Helper-Info.plist";
  				MACOSX_DEPLOYMENT_TARGET = 10.10;
-Remove fastlane keychain 
---- a/fastlane/Fastfile
-+++ clashX/fastlane/Fastfile
-@@ -1,7 +1,5 @@
- lane :build do
- 
--addKeyChain
--
- build_app(
-   workspace: "ClashX.xcworkspace",
-   scheme: "ClashX",
-@@ -31,30 +29,3 @@ increment_build_number_in_plist(
-     target: 'ClashX'
- )
- end
--
--lane :addKeyChain do
--  if is_ci?
--    
--    puts("create custom keychain")
--
--    delete_keychain(
--      name: "clashBuild"
--    ) if File.exist? File.expand_path("~/Library/Keychains/clashBuild-db")
--
--    create_keychain(
--      name: "clashBuild",
--      default_keychain: false,
--      unlock: true,
--      timeout: 3600,
--      lock_when_sleeps: false,
--      password: "password"
--    )
--    
--    import_certificate(
--      certificate_path: ".github/certs/dist.p12",
--      keychain_name:"clashBuild",
--      keychain_password:"password",
--      certificate_password:""
--    )
--  end
--end
-\ No newline at end of file

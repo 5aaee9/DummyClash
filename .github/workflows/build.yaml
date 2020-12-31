@@ -31,10 +31,10 @@ jobs:
         patch -p0 <../../../patchs/0000-go-shadowsocks2-add-clash.diff
         patch -p0 <../../../patchs/0001-clash-rewrite-go-mod.diff
 
-
     - name: Setup env
       run: |
         echo `/usr/bin/xcodebuild -version`
+        openssl aes-256-cbc -k "${{ secrets.CERT_ENCRYPTION_SECRET }}" -in "data/clashX.p12.enc" -d -a -out "clashX/.github/certs/dist.p12" -md md5
         cd clashX
         gem install bundler:1.16.2
         bundle install
