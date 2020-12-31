@@ -69,7 +69,7 @@ jobs:
     - name: Create DMG
       run: |
         npm install --global create-dmg
-        create-dmg clashX/ClashX.app
+        create-dmg clashX/ClashX.app || true
         mv ClashX*.dmg ClashX.dmg
 
     - name: Create ClashX artifact
