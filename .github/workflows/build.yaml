@@ -142,7 +142,7 @@ jobs:
         rm -f Clash.for.Windows-${{ steps.clash_for_windows.outputs.release }}-win.7z
         rm -f resources/static/files/win/x64/clash-win64.exe
         cp ../../result/clash-windows-amd64.exe resources/static/files/win/x64/clash-win64.exe
-        7z a ../../result/Clash.for.Windows-${{ steps.clash_for_windows.outputs.release }}-win.7z *
+        7z a ../../result/Clash.for.Windows-win.7z *
 
     - name: Download ClashX result
       uses: actions/download-artifact@v2
