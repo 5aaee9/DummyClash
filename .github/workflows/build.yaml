@@ -24,7 +24,7 @@ jobs:
       run: |
         git clone https://github.com/yichengchen/clashX.git
         patch -p0 <patchs/0003-clash-x-build.diff
-        patch -p0 <patchs/0004-remove-clashx-code-sign.diff
+        bash patchs/0004-update-clashx-code-sign.bash
         cd clashX/ClashX/goClash
         git clone https://github.com/Dreamacro/clash.git
         git clone https://github.com/Dreamacro/go-shadowsocks2.git
