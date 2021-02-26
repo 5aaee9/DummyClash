@@ -30,6 +30,7 @@ jobs:
         git clone https://github.com/Dreamacro/go-shadowsocks2.git
         patch -p0 <../../../patchs/0000-go-shadowsocks2-add-clash.diff
         patch -p0 <../../../patchs/0001-clash-rewrite-go-mod.diff
+        go mod tidy
 
     - name: Setup env
       run: |
