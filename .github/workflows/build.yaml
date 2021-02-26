@@ -42,7 +42,7 @@ jobs:
     - name: Build
       run: |
         cd clashX
-        bash install_dependency.sh skip-build-go
+        bash install_dependency.sh
         cd ClashX
         python3 add_build_info.py
         cd ..
