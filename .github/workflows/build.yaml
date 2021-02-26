@@ -18,7 +18,7 @@ jobs:
       uses: actions/setup-go@v2
       with:
         stable: 'false'
-        go-version: '1.16.0'
+        go-version: '1.16.x'
 
     - name: Clone clashX source
       run: |
@@ -38,24 +38,6 @@ jobs:
         cd clashX
         gem install bundler:1.16.2
         bundle install
-
-    - name: Build arm core
-      run: |
-        cd clashX/ClashX/goClash
-        go mod tidy
-        python3 build_clash_arm64.py
-
-    - name: setup Go stable
-      uses: actions/setup-go@v2
-      with:
-        go-version: 1.15.x
-
-    - name: Build core x64
-      run: |
-        cd clashX/ClashX/goClash
-        python3 build_clash.py
-        mv goClash.a goClash_x86.a
-        lipo *.a -create -output goClash.a
 
     - name: Build
       run: |
