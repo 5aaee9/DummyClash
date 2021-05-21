@@ -132,10 +132,7 @@ jobs:
   clash:
     name: Build Clash
     runs-on: ubuntu-latest
-    needs: 
-    - clashX
-    - cfa
-
+    
     steps:
     - uses: actions/checkout@v2
     - name: Setup Go
@@ -146,7 +143,7 @@ jobs:
     - name: Setup env
       run: |
         sudo apt-get update -y
-        sudo apt-get install git make p7zip-full -y
+        sudo apt-get install git make -y
 
     - name: Create result dir
       run: mkdir result
@@ -169,14 +166,49 @@ jobs:
         make all-arch
         mv bin/* ../result
 
+    - name: Package clash files
+      run: |
+        UPSTREAM_CLASH_HASH=`cd clash && git rev-parse HEAD`
+        UPSTREAM_GO_SS2_HASH=`cd go-shadowsocks2 && git rev-parse HEAD`
+
+        echo "$UPSTREAM_CLASH_HASH" > result/clash.hash
+        echo "UPSTREAM_GO_SS2_HASH" > result/go-ss.hash
+        
+        cd result
+        tar zcvf clash.tgz *
+        mv clash.tgz ..
+        
+    - name: Create cfa artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: Clash
+        path: clash.tgz
+
+  cfw:
+    name: Build Clash For Windows
+    runs-on: ubuntu-latest
+    needs: clash
+
+    steps:
+    - name: Setup env
+      run: |
+        sudo apt-get update -y
+        sudo apt-get install p7zip-full -y
+
     - name: Fetch latest cfw version
       id: clash_for_windows
       uses: pozetroninc/github-action-get-latest-release@master
       with:
         repository: Fndroid/clash_for_windows_pkg
 
+    - name: Download clash files
+      uses: actions/download-artifact@v2
+      with:
+        name: Clash
+
     - name: Download latest cfw 
       run: |
+        tar zxvf clash.tgz
         echo Downloading CFW ${{ steps.clash_for_windows.outputs.release }}
         mkdir -p cfw/Clash.for.Windows-${{ steps.clash_for_windows.outputs.release }}-win
         cd cfw/Clash.for.Windows-${{ steps.clash_for_windows.outputs.release }}-win
@@ -184,23 +216,50 @@ jobs:
         7z x Clash.for.Windows-${{ steps.clash_for_windows.outputs.release }}-win.7z
         rm -f Clash.for.Windows-${{ steps.clash_for_windows.outputs.release }}-win.7z
         rm -f resources/static/files/win/x64/clash-win64.exe
-        cp ../../result/clash-windows-amd64.exe resources/static/files/win/x64/clash-win64.exe
-        7z a ../../result/Clash.for.Windows-win.7z *
+        cp ../../../clash-windows-amd64.exe resources/static/files/win/x64/clash-win64.exe
+        7z a ../../../Clash.for.Windows-win.7z *
 
+    - name: Upload Clash for Windows
+      uses: actions/upload-artifact@v2
+      with:
+        name: CFW
+        path: Clash.for.Windows-win.7z
+
+
+  clash:
+    name: Build Clash
+    runs-on: ubuntu-latest
+    needs: 
+    - clashX
+    - cfa
+    - cfw
+    - clash
+
+    steps:
     - name: Download ClashX result
       uses: actions/download-artifact@v2
       with:
         name: ClashX
 
-    - name: Download ClashX result
-      uses: actions/download-artifact@v2
-      with:
-        name: CFA
-
     - name: Download ClashX version result
       uses: actions/download-artifact@v2
       with:
         name: ClashXVersion
+
+    - name: Download CFA result
+      uses: actions/download-artifact@v2
+      with:
+        name: CFA
+    
+    - name: Download CFW result
+      uses: actions/download-artifact@v2
+      with:
+        name: CFW
+
+    - name: Download Clash result
+      uses: actions/download-artifact@v2
+      with:
+        name: Clash
 
     - name: Release files
       env:
@@ -209,16 +268,21 @@ jobs:
         set -x
         ls -lah
         mv cfa.tgz result
+        mv clash.tgz result
+        mv Clash.for.Windows-win.7z result
+        mv ClashX.dmg result
         cd result
         tar zxvf cfa.tgz
+        tar zxvf clash.tgz
+        rm -f clash.tgz
         rm -f cfa.tgz
+        mv *.hash ..
         cd ..
-        mv ClashX.dmg result
         hub release delete latest | true
         hub release create -m latest latest
         REPO_HASH="${{github.sha}}"
-        UPSTREAM_CLASH_HASH=`cd clash && git rev-parse HEAD`
-        UPSTREAM_GO_SS2_HASH=`cd go-shadowsocks2 && git rev-parse HEAD`
+        UPSTREAM_CLASH_HASH=`cat clash.hash`
+        UPSTREAM_GO_SS2_HASH=`cat go-ss.hash`
         UPSTREAM_CLASH_X_HASH=`cat ClashXVersion`
         
         for item in `ls result`; do
