@@ -223,7 +223,7 @@ jobs:
         
         for item in `ls result`; do
           # Skip 7zip file
-          if [[ "$item" =~ .*\.7z || "$item" =~ .*\.dmg ]]; then
+          if [[ "$item" =~ .*\.7z || "$item" =~ .*\.dmg || "$item" =~ .*\.apk ]]; then
             hub release edit -a result/$item -m "" latest
           else
             gzip -9 result/$item
