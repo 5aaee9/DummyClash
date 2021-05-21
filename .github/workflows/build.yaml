@@ -54,7 +54,7 @@ jobs:
       run: |
         HOME_DIR=$(pwd)
         cd ClashForAndroid
-        ./gradlew assembleRelease
+        ./gradlew assembleRelease --stacktrace
         cd app/build/outputs/apk/foss/release/
         tar zcvf cfa.tgz *.apk
         mv cfa.tgz $HOME_DIR
