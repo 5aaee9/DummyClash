@@ -226,8 +226,8 @@ jobs:
         path: Clash.for.Windows-win.7z
 
 
-  clash:
-    name: Build Clash
+  release:
+    name: Upload release
     runs-on: ubuntu-latest
     needs: 
     - clashX
