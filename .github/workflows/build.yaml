@@ -216,15 +216,14 @@ jobs:
         7z x Clash.for.Windows-${{ steps.clash_for_windows.outputs.release }}-win.7z
         rm -f Clash.for.Windows-${{ steps.clash_for_windows.outputs.release }}-win.7z
         rm -f resources/static/files/win/x64/clash-win64.exe
-        cp ../../../clash-windows-amd64.exe resources/static/files/win/x64/clash-win64.exe
-        7z a ../../../Clash.for.Windows-win.7z *
+        cp ../../clash-windows-amd64.exe resources/static/files/win/x64/clash-win64.exe
+        7z a ../../Clash.for.Windows-win.7z *
 
     - name: Upload Clash for Windows
       uses: actions/upload-artifact@v2
       with:
         name: CFW
         path: Clash.for.Windows-win.7z
-
 
   release:
     name: Upload release
