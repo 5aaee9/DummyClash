@@ -13,5 +13,5 @@
  	gopkg.in/yaml.v2 v2.4.0
  )
 +
-+replace github.com/Dreamacro/go-shadowsocks2 => ../go-shadowsocks2
++replace github.com/Dreamacro/go-shadowsocks2 => ./go-shadowsocks2
 +

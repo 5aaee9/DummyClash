@@ -42,7 +42,6 @@ jobs:
         HOME_DIR=$(pwd)
         pushd ClashForAndroid/core/src/main/golang/clash
         patch -p1 <$HOME_DIR/patchs/0001-clash-rewrite-go-mod.diff
-        cd ..
         git clone https://github.com/Dreamacro/go-shadowsocks2.git
         patch -p0 <$HOME_DIR/patchs/0000-go-shadowsocks2-add-clash.diff
         popd
@@ -80,13 +79,16 @@ jobs:
     - name: Clone clashX source
       run: |
         git clone https://github.com/yichengchen/clashX.git
+        HOME_DIR=$(pwd)
         patch -p0 <patchs/0003-clash-x-build.diff
         bash patchs/0004-update-clashx-code-sign.bash
         cd clashX/ClashX/goClash
         git clone https://github.com/Dreamacro/clash.git
+        cd clash
+        patch -p1 <$HOME_DIR/patchs/0001-clash-rewrite-go-mod.diff
         git clone https://github.com/Dreamacro/go-shadowsocks2.git
-        patch -p0 <../../../patchs/0000-go-shadowsocks2-add-clash.diff
-        patch -p0 <../../../patchs/0001-clash-rewrite-go-mod.diff
+        patch -p0 <$HOME_DIR/patchs/0000-go-shadowsocks2-add-clash.diff
+        cd ..
         go mod tidy
 
     - name: Setup env
@@ -151,13 +153,15 @@ jobs:
     - name: Clone latest clash
       run: |
         git clone https://github.com/Dreamacro/clash.git
+        cd clash
         git clone https://github.com/Dreamacro/go-shadowsocks2.git
 
     - name: Patch files
       run: |
-        patch -p0 <patchs/0000-go-shadowsocks2-add-clash.diff
         patch -p0 <patchs/0001-clash-rewrite-go-mod.diff
         patch -p0 <patchs/0002-fix-cfw.diff
+        cd clash
+        patch -p0 <../patchs/0000-go-shadowsocks2-add-clash.diff
 
     - name: Build clash all platform
       run: |
