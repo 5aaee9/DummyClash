@@ -266,6 +266,7 @@ jobs:
       run: |  
         set -x
         ls -lah
+        mkdir result
         mv cfa.tgz result
         mv clash.tgz result
         mv Clash.for.Windows-win.7z result
