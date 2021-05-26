@@ -171,7 +171,7 @@ jobs:
     - name: Package clash files
       run: |
         UPSTREAM_CLASH_HASH=`cd clash && git rev-parse HEAD`
-        UPSTREAM_GO_SS2_HASH=`cd go-shadowsocks2 && git rev-parse HEAD`
+        UPSTREAM_GO_SS2_HASH=`cd clash/go-shadowsocks2 && git rev-parse HEAD`
 
         echo "$UPSTREAM_CLASH_HASH" > result/clash.hash
         echo "UPSTREAM_GO_SS2_HASH" > result/go-ss.hash
