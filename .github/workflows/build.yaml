@@ -235,6 +235,7 @@ jobs:
     - clash
 
     steps:
+    - uses: actions/checkout@v2
     - name: Download ClashX result
       uses: actions/download-artifact@v2
       with:
