@@ -45,7 +45,7 @@ jobs:
         git clone https://github.com/Dreamacro/go-shadowsocks2.git
         patch -p0 <$HOME_DIR/patchs/0000-go-shadowsocks2-add-clash.diff
         cd ..
-        patch -p0 <$HOME_DIR/patchs/0005-cfa-redirect-deps.diff
+        patch -p1 <$HOME_DIR/patchs/0005-cfa-redirect-deps.diff
         popd
 
         envsubst < data/keystore.properties > ClashForAndroid/keystore.properties
