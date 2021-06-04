@@ -1,0 +1,8 @@
+--- a/go.mod
++++ b/go.mod
+@@ -18,3 +18,5 @@ replace github.com/Dreamacro/clash => ./clash
+ replace github.com/kr328/tun2socket => ./tun2socket
+ 
+ replace cfa/blob => ../../../build/intermediates/golang_blob
++
++replace github.com/Dreamacro/go-shadowsocks2 => ./clash/go-shadowsocks2
