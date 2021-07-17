@@ -82,7 +82,7 @@ jobs:
       run: |
         git clone https://github.com/yichengchen/clashX.git
         HOME_DIR=$(pwd)
-        patch -p0 <patchs/0003-clash-x-build.diff
+        bash patchs/0003-clash-x-build.bash
         bash patchs/0004-update-clashx-code-sign.bash
         cd clashX/ClashX/goClash
         git clone https://github.com/Dreamacro/clash.git
@@ -134,7 +134,7 @@ jobs:
   clash:
     name: Build Clash
     runs-on: ubuntu-latest
-    
+
     steps:
     - uses: actions/checkout@v2
     - name: Setup Go
@@ -177,11 +177,11 @@ jobs:
 
         echo "$UPSTREAM_CLASH_HASH" > result/clash.hash
         echo "UPSTREAM_GO_SS2_HASH" > result/go-ss.hash
-        
+
         cd result
         tar zcvf clash.tgz *
         mv clash.tgz ..
-        
+
     - name: Create cfa artifact
       uses: actions/upload-artifact@v2
       with:
@@ -210,7 +210,7 @@ jobs:
       with:
         name: Clash
 
-    - name: Download latest cfw 
+    - name: Download latest cfw
       run: |
         tar zxvf clash.tgz
         echo Downloading CFW ${{ steps.clash_for_windows.outputs.release }}
@@ -232,7 +232,7 @@ jobs:
   release:
     name: Upload release
     runs-on: ubuntu-latest
-    needs: 
+    needs:
     - clashX
     - cfa
     - cfw
@@ -254,7 +254,7 @@ jobs:
       uses: actions/download-artifact@v2
       with:
         name: CFA
-    
+
     - name: Download CFW result
       uses: actions/download-artifact@v2
       with:
@@ -268,7 +268,7 @@ jobs:
     - name: Release files
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      run: |  
+      run: |
         set -x
         ls -lah
         mkdir result
@@ -289,7 +289,7 @@ jobs:
         UPSTREAM_CLASH_HASH=`cat clash.hash`
         UPSTREAM_GO_SS2_HASH=`cat go-ss.hash`
         UPSTREAM_CLASH_X_HASH=`cat ClashXVersion`
-        
+
         for item in `ls result`; do
           # Skip 7zip file
           if [[ "$item" =~ .*\.7z || "$item" =~ .*\.dmg || "$item" =~ .*\.apk ]]; then
