@@ -37,7 +37,7 @@ jobs:
           --recursive # CFA use submodule
 
         # Replace NDK version
-        sed -i 's#23.0.7123448#23.0.7344513#g' ClashForAndroid/buildSrc/src/main/java/Build.kt
+        # sed -i 's#23.0.7123448#23.0.7344513#g' ClashForAndroid/buildSrc/src/main/java/Build.kt
 
         HOME_DIR=$(pwd)
         pushd ClashForAndroid/core/src/main/golang/clash
