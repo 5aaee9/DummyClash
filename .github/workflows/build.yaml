@@ -48,7 +48,7 @@ jobs:
         patch -p1 <$HOME_DIR/patchs/0005-cfa-redirect-deps.diff
         popd
 
-        envsubst < data/keystore.properties > ClashForAndroid/keystore.properties
+        envsubst < data/signing.properties > ClashForAndroid/keystore.properties
         cp data/local.properties ClashForAndroid/
 
     - name: Build apk files
