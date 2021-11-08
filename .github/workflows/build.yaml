@@ -57,6 +57,10 @@ jobs:
         cd ClashForAndroid
         ./gradlew app:assembleFossRelease
         cd app/build/outputs/apk/foss/release/
+        for item in `ls .`; do
+          fileType=$(echo $item | awk -F '-' '{printf $4}')
+          mv $item app-foss-$fileType-release.apk
+        done
         tar zcvf cfa.tgz *.apk
         mv cfa.tgz $HOME_DIR
 
